@@ -5,10 +5,21 @@
  * @returns {number}
  */
 
-function calculateSimpleRevenue(purchase, _product) {
-   // @TODO: Расчет выручки от операции
-   const { discount, sale_price, quantity } = purchase
+// Тестовый объект
+const testObj = {
+    discount: 5,
+    sale_price: 1000,
+    quantity: 1,
 }
+
+function calculateSimpleRevenue(purchase, _product) {
+   const { discount, sale_price, quantity } = purchase
+   const discountRate = 1 - (discount / 100)
+   console.log('discRate: ', discountRate)
+   return (sale_price * quantity) * discountRate
+}
+
+console.log('calculateSimpleRevenue Test: ', calculateSimpleRevenue(testObj))
 
 /**
  * Функция для расчета бонусов
@@ -71,11 +82,9 @@ function analyzeSalesData(data, options) {
 
         record.items.forEach(item => {
             const product = productIndex[item.sku]
-            
+            const cost = product.purchase_price * item.quantity
         })
     })
-
-    console.log(sellerStats)
 
     // @TODO: Сортировка продавцов по прибыли
 
