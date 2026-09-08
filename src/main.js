@@ -88,7 +88,7 @@ function analyzeSalesData(data, options) {
             if (!seller.products_sold[item.sku]) {
                 seller.products_sold[item.sku] = 0
             }
-            seller.products_sold[item.sku] += 1
+            seller.products_sold[item.sku] += item.quantity
         })
     })
 
@@ -98,8 +98,8 @@ function analyzeSalesData(data, options) {
         seller.bonus = calculateBonusByProfit(index, sellerStats.length, seller)
         seller.top_products = 
             Object.entries(seller.products_sold)
-                .map(([key, value]) => ({sku: key, purchases: value}))
-                    .sort((a, b) => b.purchases - a.purchases)
+                .map(([key, value]) => ({sku: key, quantity: value}))
+                    .sort((a, b) => b.quantity - a.quantity)
                         .slice(0, 10)
     })
 
