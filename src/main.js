@@ -5,21 +5,12 @@
  * @returns {number}
  */
 
-// Тестовый объект
-const testObj = {
-    discount: 5,
-    sale_price: 1000,
-    quantity: 1,
-}
-
 function calculateSimpleRevenue(purchase, _product) {
    const { discount, sale_price, quantity } = purchase
    const discountRate = 1 - (discount / 100)
-   console.log('discRate: ', discountRate)
+   
    return (sale_price * quantity) * discountRate
 }
-
-console.log('calculateSimpleRevenue Test: ', calculateSimpleRevenue(testObj))
 
 /**
  * Функция для расчета бонусов
@@ -30,8 +21,17 @@ console.log('calculateSimpleRevenue Test: ', calculateSimpleRevenue(testObj))
  */
 
 function calculateBonusByProfit(index, total, seller) {
-    // @TODO: Расчет бонуса от позиции в рейтинге
     const { profit } = seller
+
+    if (index === 0) {
+        return profit * 0.15
+    }   else if (index === 1 || index === 2) {
+        return profit * 0.10
+    }   else if (index === total - 1) {
+        return 0
+    }   else {
+        return profit * 0.05
+    }
 }
 
 /**
