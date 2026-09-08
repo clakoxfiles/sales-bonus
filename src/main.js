@@ -8,7 +8,6 @@
 function calculateSimpleRevenue(purchase, _product) {
    const { discount, sale_price, quantity } = purchase
    const discountRate = 1 - (discount / 100)
-   
    return (sale_price * quantity) * discountRate
 }
 
@@ -83,12 +82,34 @@ function analyzeSalesData(data, options) {
         record.items.forEach(item => {
             const product = productIndex[item.sku]
             const cost = product.purchase_price * item.quantity
+            const revenue = calculateRevenue(item, product) - cost
+            seller.profit += revenue
+
+            if (!seller.products_sold[item.sku]) {
+                seller.products_sold[item.sku] = 0
+            }
+            seller.products_sold[item.sku] += 1
         })
     })
 
-    // @TODO: Сортировка продавцов по прибыли
+    sellerStats.sort((a, b) => b.profit - a.profit)
 
-    // @TODO: Назначение премий на основе ранжирования
+    sellerStats.forEach((seller, index) => {
+        seller.bonus = calculateBonusByProfit(index, sellerStats.length, seller)
+        seller.top_products = 
+            Object.entries(seller.products_sold)
+                .map(([key, value]) => ({sku: key, purchases: value}))
+                    .sort((a, b) => b.purchases - a.purchases)
+                        .slice(0, 10)
+    })
 
-    // @TODO: Подготовка итоговой коллекции с нужными полями
+    return sellerStats.map(seller => ({
+        seller_id: seller.id,
+        name: seller.name,
+        revenue: +seller.revenue.toFixed(2),
+        profit: +seller.profit.toFixed(2),
+        sales_count: seller.sales_count,
+        top_products: seller.top_products,
+        bonus: +seller.bonus.toFixed(2)
+    }))
 }
